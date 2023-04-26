@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from 'react';
+import getAllPokemon from './api/PokeRequests';
+
+interface Pokemon {
+  name: string;
+  url: string;
+}
 
 function App() {
+  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    async function fetchPokemon() {
+      const allPokemon = await getAllPokemon();
+      setPokemon(allPokemon);
+    }
+    fetchPokemon();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Pokemon List</h1>
+      <ul>
+        {pokemon.map((p) => (
+          <li key={p.name}>{p.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
